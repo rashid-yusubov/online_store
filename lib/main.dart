@@ -23,8 +23,36 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class InternetShopPage extends StatelessWidget {
+class InternetShopPage extends StatefulWidget {
   const InternetShopPage({super.key});
+
+  @override
+  State<InternetShopPage> createState() => _InternetShopPageState();
+}
+
+class _InternetShopPageState extends State<InternetShopPage> {
+  final List<String> images = [
+    'assets/images/shop_1.jpg',
+    'assets/images/shop_2.jpg',
+    'assets/images/shop_3.jpg',
+    'assets/images/shop_4.jpg',
+    'assets/images/shop_5.jpg',
+  ];
+
+  int currentImage = 0;
+
+  void nextImage() {
+    setState(() {
+      currentImage = (currentImage + 1) % images.length;
+    });
+  }
+
+  void previousImage() {
+    setState(() {
+      currentImage =
+          (currentImage - 1 + images.length) % images.length;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +61,8 @@ class InternetShopPage extends StatelessWidget {
         title: const Text(
           'Интернет-магазины',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
+            fontSize: 26,
+            fontFamily: 'GreatVibes',
           ),
         ),
         centerTitle: true,
@@ -62,6 +91,7 @@ class InternetShopPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    fontFamily: 'Montserrat',
                   ),
                 ),
               ),
@@ -77,8 +107,8 @@ class InternetShopPage extends StatelessWidget {
                 ),
                 child: const Text(
                   'Интернет-магазин — программная платформа '
-                  'для просмотра каталога товаров, поиска продукции, '
-                  'формирования корзины и оформления заказов.',
+                      'для просмотра каталога товаров, поиска продукции, '
+                      'формирования корзины и оформления заказов.',
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -91,27 +121,70 @@ class InternetShopPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      height: 220,
+                      height: 260,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.grey,
                         ),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Center(
-                        child: Image.asset(
-                          'assets/images/shop.png',
-                          width: 220,
-                          height: 180,
-                          fit: BoxFit.contain,
-                        ),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: nextImage,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.asset(
+                                    images[currentImage],
+                                    width: double.infinity,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 8,
+                              right: 8,
+                              bottom: 8,
+                            ),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  onPressed: previousImage,
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                  ),
+                                ),
+                                Text(
+                                  '${currentImage + 1} / ${images.length}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: nextImage,
+                                  icon: const Icon(
+                                    Icons.arrow_forward,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Container(
-                      height: 220,
+                      height: 260,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -120,7 +193,8 @@ class InternetShopPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment:
+                        CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Основные возможности:',
@@ -144,6 +218,18 @@ class InternetShopPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
+              const Center(
+                child: Text(
+                  'Нажмите на изображение или используйте кнопки '
+                      'для смены изображения',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               const Divider(
                 thickness: 1,
               ),
