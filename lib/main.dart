@@ -39,19 +39,36 @@ class _InternetShopPageState extends State<InternetShopPage> {
     'assets/images/shop_5.jpg',
   ];
 
-  int currentImage = 0;
+  final List<Map<String, dynamic>> shopItems = [
+    {
+      'title': 'Каталог товаров',
+      'description': 'Просмотр доступных товаров интернет-магазина.',
+      'icon': Icons.shopping_bag,
+    },
+    {
+      'title': 'Поиск товаров',
+      'description': 'Быстрый поиск нужной продукции.',
+      'icon': Icons.search,
+    },
+    {
+      'title': 'Корзина',
+      'description': 'Просмотр выбранных товаров и изменение количества.',
+      'icon': Icons.shopping_cart,
+    },
+    {
+      'title': 'Оформление заказа',
+      'description': 'Формирование и подтверждение заказа.',
+      'icon': Icons.check_circle,
+    },
+  ];
 
-  void nextImage() {
-    setState(() {
-      currentImage = (currentImage + 1) % images.length;
-    });
-  }
-
-  void previousImage() {
-    setState(() {
-      currentImage =
-          (currentImage - 1 + images.length) % images.length;
-    });
+  void showItemSnackBar(String title) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Выбран пункт: $title'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -69,12 +86,15 @@ class _InternetShopPageState extends State<InternetShopPage> {
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
+              // Название ПО
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
@@ -95,7 +115,10 @@ class _InternetShopPageState extends State<InternetShopPage> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 16),
+
+              // Описание ПО
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
@@ -115,125 +138,113 @@ class _InternetShopPageState extends State<InternetShopPage> {
                   textAlign: TextAlign.justify,
                 ),
               ),
+
               const SizedBox(height: 20),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 260,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: nextImage,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.asset(
-                                    images[currentImage],
-                                    width: double.infinity,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 8,
-                              right: 8,
-                              bottom: 8,
-                            ),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                  onPressed: previousImage,
-                                  icon: const Icon(
-                                    Icons.arrow_back,
-                                  ),
-                                ),
-                                Text(
-                                  '${currentImage + 1} / ${images.length}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: nextImage,
-                                  icon: const Icon(
-                                    Icons.arrow_forward,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Container(
-                      height: 260,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Основные возможности:',
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 12),
-                          Text('1. Каталог товаров'),
-                          SizedBox(height: 8),
-                          Text('2. Поиск товаров'),
-                          SizedBox(height: 8),
-                          Text('3. Корзина'),
-                          SizedBox(height: 8),
-                          Text('4. Оформление заказа'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              const Center(
-                child: Text(
-                  'Нажмите на изображение или используйте кнопки '
-                      'для смены изображения',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13,
-                  ),
+
+              // Заголовок горизонтального списка
+              const Text(
+                'Изображения интернет-магазинов',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+
+              const SizedBox(height: 10),
+
+              // Горизонтальный ListView
+              SizedBox(
+                height: 180,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: images.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: 260,
+                      margin: const EdgeInsets.only(right: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          images[index],
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // Заголовок вертикального списка
+              const Text(
+                'Основные возможности',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // Вертикальный ListView с карточками
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: shopItems.length,
+                itemBuilder: (context, index) {
+                  final item = shopItems[index];
+
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    elevation: 2,
+                    child: ListTile(
+                      leading: Icon(
+                        item['icon'],
+                        color: Colors.blue,
+                        size: 30,
+                      ),
+
+                      title: Text(
+                        item['title'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      subtitle: Text(
+                        item['description'],
+                      ),
+
+                      trailing: const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.grey,
+                        size: 18,
+                      ),
+
+                      onTap: () {
+                        showItemSnackBar(item['title']);
+                      },
+                    ),
+                  );
+                },
+              ),
+
               const SizedBox(height: 16),
+
               const Divider(
                 thickness: 1,
               ),
+
               const SizedBox(height: 16),
+
+              // ФИО и группа
               Row(
                 children: [
                   Container(
@@ -252,7 +263,9 @@ class _InternetShopPageState extends State<InternetShopPage> {
                       ),
                     ),
                   ),
+
                   const SizedBox(width: 16),
+
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.all(16),
